@@ -58,9 +58,10 @@ data = data[bool_mask]
 
 # k-means clustering
 # http://glowingpython.blogspot.com/2012/04/k-means-clustering-with-scipy.html
+num_clusters = 4
 data_matrix = data.as_matrix()
 data_matrix = whiten(data_matrix)
-centroids, distortion = kmeans(data_matrix, 4)
+centroids, distortion = kmeans(data_matrix, num_clusters)
 idx, distortion = vq(data_matrix, centroids)
 
 # add column with cluster grouping at end of data
@@ -68,8 +69,11 @@ data = data.join(Series(idx, index=data.index, name='cluster'))
 
 # create parallel coordinates plot
 plt.figure()
-parallel_coordinates(data, 'cluster', use_columns=True,
-                     colors=('#556270', '#4ECDC4', '#C7F464', '#FF6B6B'))
+fig = parallel_coordinates(data, 'cluster', use_columns=True,
+                           colors=('#556270', '#4ECDC4', '#C7F464', '#FF6B6B'))
+fig.set_title("Gene Expression vs. Time")
+fig.set_xlabel("Time (hours)")
+fig.set_ylabel("Relative Expression")
 
 plt.show()
 
