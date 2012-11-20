@@ -3,41 +3,44 @@
 """
 DESeq clustering
 Keith Hughitt <khughitt@umd.edu>
-November 12, 2012
+November 20, 2012
 
 Reads in DESeq input count table and attempts to cluster
-genes which show similar trends of expression.
-
-Example usage:
-
-    count_table_clustering.py count_table
-    
+genes which show similar trends of expression.    
 """
-import pandas
 import numpy as np
+from pandas import read_csv, Series
+from pandas.tools.plotting import parallel_coordinates
 from matplotlib import pyplot as plt
 from scipy.cluster.vq import kmeans, whiten, vq
 
+"""Main"""
+#target="human"
+target="tcruzi"
+
 # Read in data
-#replicates = pandas.read_csv('../data/combined_countable_replicates', index_col=0)
-#controls = pandas.read_csv('../data/combined_countable_controls', index_col=0)
-replicates = pandas.read_csv('../data/combined_countable_replicates',
+col_names = ['gene', 4, 6, 12, 20, 24, 48, 72]
+
+replicates = read_csv('../data/%s_counts_replicates' % target,
                              index_col=0, skiprows=1, header=None,
-                             names=['gene', 4, 6, 12, 20, 24, 48, 72])
-controls = pandas.read_csv('../data/combined_countable_controls',
-                           index_col=0, skiprows=1, header=None,
-                           names=['gene', 4, 6, 12, 20, 24, 48, 72])
+                             names=col_names)
+
+# Currently we don't have any control DEseq counts for T. cruzi so just
+# use zero-filled dataframe.
+if target == "tcruzi":
+    controls = replicates.copy().clip(0, 0)
+else:
+    controls = read_csv('../data/%s_counts_controls' % target,
+                               index_col=0, skiprows=1, header=None, 
+                               names=col_names)
+    controls = controls / controls.sum().astype('float')
 
 # Normalize count data
-#
-# @TODO talk to Yuan/check logs to see if any normalization has been done
-# prior to count table generation...
 #
 # For now, a simple approach to normalizing data both between sample types
 # and time periods is to divide each column by the total number of counts
 # that column, resulting in a proportion of total expression.
 replicates = replicates / replicates.sum().astype('float')
-controls = controls / controls.sum().astype('float')
 
 # Subtract the control counts from the infected counts to see look at the
 # differences between infected (replicates) and control data sets.
@@ -61,14 +64,12 @@ centroids, distortion = kmeans(data_matrix, 4)
 idx, distortion = vq(data_matrix, centroids)
 
 # add column with cluster grouping at end of data
-#x = np.column_stack([x, idx])
-data = data.join(pandas.Series(idx, index=data.index, name='cluster'))
+data = data.join(Series(idx, index=data.index, name='cluster'))
 
+# create parallel coordinates plot
 plt.figure()
-pandas.tools.plotting.parallel_coordinates(data, 'cluster', 
-                                           colors=('#556270', '#4ECDC4', '#C7F464', '#FF6B6B'),
-                                           use_columns=True)
-#plt.legend().set_visible(False)
-plt.show()
+parallel_coordinates(data, 'cluster', use_columns=True,
+                     colors=('#556270', '#4ECDC4', '#C7F464', '#FF6B6B'))
 
+plt.show()
 
