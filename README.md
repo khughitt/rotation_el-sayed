@@ -20,6 +20,8 @@ The first problem I worked on was the clustering and visualization of T. cruzi
 infection RNA-Seq time series data. The started with DESeq counttables for 
 genes mapped to either a Human or T. cruzi reference genome.
 
+![screenshot](https://raw.github.com/khughitt/rotation_el-sayed/master/extra/screenshot.png)
+
 Files:
 * **rna-seq_clustering.py**
 * **notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb**
@@ -37,3 +39,5 @@ Finally, the results of the clustering were visualized using a [parallel coordin
 and genes which appeared to show significant patterns of differential expression
 were pulled out and mapped to functional annotations from [Ensembl](http://useast.ensembl.org/Homo_sapiens/Info/Index)
 (human) and [TriTrypDB](http://tritrypdb.org/tritrypdb/) (T. cruzi).
+
+
