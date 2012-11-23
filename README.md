@@ -22,9 +22,11 @@ genes mapped to either a Human or T. cruzi reference genome.
 
 ![screenshot](https://raw.github.com/khughitt/rotation_el-sayed/master/extra/screenshot.png)
 
+Notebook:
+* [notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb](http://nbviewer.ipython.org/urls/raw.github.com/khughitt/rotation_el-sayed/master/notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb)
+
 Files:
 * **rna-seq_clustering.py**
-* **notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb**
 
 Although a significant amount of reserach over the past few years has focused
 on the normalizing RNA-seq data, e.g. [Sun & Zhu (2012)](http://www.ncbi.nlm.nih.gov/pubmed/22914217),
@@ -36,8 +38,8 @@ To group genes with similar patterns of expression across time, [k-means cluster
 was used. A few different arbitrary values of k were tested.
 
 Finally, the results of the clustering were visualized using a [parallel coordinates plot](http://en.wikipedia.org/wiki/Parallel_coordinates),
-and genes which appeared to show significant patterns of differential expression
-were pulled out and mapped to functional annotations from [Ensembl](http://useast.ensembl.org/Homo_sapiens/Info/Index)
+and genes which appeared to show significant patterns of differential 
+expression were pulled out and mapped to functional annotations from [Ensembl](http://useast.ensembl.org/Homo_sapiens/Info/Index)
 (human) and [TriTrypDB](http://tritrypdb.org/tritrypdb/) (T. cruzi).
 
 
