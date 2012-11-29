@@ -44,7 +44,7 @@ awk '{print $1, $3, $5, $7, $9, $12, $15, $19}' \
 sed '1 s/hrs_after_tc_infection1//g' |
 sed '2,3d' | 
 sed 's/ /,/g' |
-head --lines=-3 > ${output}_replicates
+head --lines=-3 > ${output}_replicates.csv
 
 # CONTROLS
 # Grab columns of interest and rename col headers to include only hour portion
@@ -55,5 +55,5 @@ sed '1 s/hrs_before_tc_infection1//g' |
 sed '1 s/hrs_before_tc_infection//g' |
 sed '2,3d' | 
 sed 's/ /,/g' |
-head --lines=-3 > ${output}_controls
+head --lines=-3 > ${output}_controls.csv
 

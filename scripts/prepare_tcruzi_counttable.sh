@@ -37,5 +37,5 @@ sed '1 s/hr//g' |
 sed '2,3d' | 
 sed 's/[ ]\+/,/g'| 
 sed 's/,$//g' | 
-head --lines=-3 > ${output}_replicates
+head --lines=-3 > ${output}_replicates.csv
 
