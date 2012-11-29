@@ -23,7 +23,7 @@ genes mapped to either a Human or T. cruzi reference genome.
 ![screenshot](https://raw.github.com/khughitt/rotation_el-sayed/master/extra/screenshot.png)
 
 Notebook:
-* [notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb](http://nbviewer.ipython.org/urls/raw.github.com/khughitt/rotation_el-sayed/master/notebooks/T_Cruzi_Gene_Expression_Time_Series_Analysis.ipynb)
+* [notebooks/T_Cruzi_RNA-Seq_Time_Series_Analysis.ipynb](http://nbviewer.ipython.org/urls/raw.github.com/khughitt/rotation_el-sayed/master/notebooks/T_Cruzi_RNA-Seq_Time_Series_Analysis.ipynb)
 
 Files:
 * **rna-seq_clustering.py**
