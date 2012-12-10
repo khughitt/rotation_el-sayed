@@ -10,8 +10,10 @@ Processes a TriTrypDB file containing Trypanosome gene ontology (GO) terms and
 return a new table mapping gene id's to GO terms.
 """
 import sys
+import csv
 
 input_file = "../data/TriTrypDB-4.2_TcruziEsmeraldo-LikeGene.txt"
+output_file = 'output/TcruziEsmeraldo_GOTerms.csv'
 
 # Parse TriTrypDB GO terms
 current_id = None
@@ -22,4 +24,11 @@ for line in open(input_file).readlines():
         current_id = line.split(": ").pop().strip()
     elif line.startswith("GO:"):
         mapping.append([current_id] + line.split('\t')[0:5])
+
+# Write output to a new file
+with open(output_file, 'wb') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerows(mapping)
+
+print("Done! Output saved to %s" % output_file)
 
