@@ -28,6 +28,7 @@ for line in open(input_file).readlines():
 # Write output to a new file
 with open(output_file, 'wb') as csvfile:
     writer = csv.writer(csvfile)
+    writer.writerow(["id", "ontology", "go_term_name", "source", "evidence_code"])
     writer.writerows(mapping)
 
 print("Done! Output saved to %s" % output_file)
