@@ -17,6 +17,19 @@ and [GOSeq](http://www.bioconductor.org/packages/release/bioc/html/goseq.html)
 to look for functional enrichment in [T. Cruzi](http://en.wikipedia.org/wiki/Trypanosoma_cruzi)
 RNA-Seq data.
 
+<!---
+```{r}
+opts_chunk$set(fig.path='figure/fig-', cache=TRUE)
+```
+--->
+
+# Knitr Options
+Fix for Github plot URLs:
+```{r}
+opts_knit$set(base.url='https://raw.github.com/khughitt/rotation_el-sayed/master/knitr/')
+```
+(source: http://stackoverflow.com/questions/11237715/how-to-display-images-in-markdown-on-github-generated-from-knitr-without-using-e)
+
 Data Preparation
 ================
 
@@ -93,7 +106,7 @@ cds <- estimateDispersions(cds)
 
 Now we are ready to perform look for DE.
 
-```{r}
+```{r DESeq}
 # DE Analysis
 result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 

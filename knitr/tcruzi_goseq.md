@@ -17,6 +17,23 @@ and [GOSeq](http://www.bioconductor.org/packages/release/bioc/html/goseq.html)
 to look for functional enrichment in [T. Cruzi](http://en.wikipedia.org/wiki/Trypanosoma_cruzi)
 RNA-Seq data.
 
+<!---
+
+```r
+opts_chunk$set(fig.path = "figure/fig-", cache = TRUE)
+```
+
+--->
+
+# Knitr Options
+Fix for Github plot URLs:
+
+```r
+opts_knit$set(base.url = "https://raw.github.com/khughitt/rotation_el-sayed/master/knitr/")
+```
+
+(source: http://stackoverflow.com/questions/11237715/how-to-display-images-in-markdown-on-github-generated-from-knitr-without-using-e)
+
 Data Preparation
 ================
 
@@ -103,7 +120,7 @@ result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 hist(result$pval, breaks = 100, col = "limegreen", border = "slateblue", main = "DESeq p-value Histogram")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk DESeq](https://raw.github.com/khughitt/rotation_el-sayed/master/knitr/figure/fig-DESeq.png) 
 
 
 
@@ -161,12 +178,12 @@ sessionInfo()
 ## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=C                 LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+##  [1] LC_CTYPE=en_US.utf8       LC_NUMERIC=C             
+##  [3] LC_TIME=en_US.utf8        LC_COLLATE=en_US.utf8    
+##  [5] LC_MONETARY=en_US.utf8    LC_MESSAGES=en_US.utf8   
+##  [7] LC_PAPER=C                LC_NAME=C                
+##  [9] LC_ADDRESS=C              LC_TELEPHONE=C           
+## [11] LC_MEASUREMENT=en_US.utf8 LC_IDENTIFICATION=C      
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     

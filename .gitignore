@@ -1,5 +1,6 @@
 output/*
 *.py[cod]
+knitr/cache
 
 # C extensions
 *.so
