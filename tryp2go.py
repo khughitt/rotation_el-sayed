@@ -20,18 +20,22 @@ output_file = 'output/TcruziEsmeraldo_GOTerms.tsv'
 
 # Parse TriTrypDB GO terms
 current_id = None
+current_len = None
 mapping = []
 
 for line in open(input_file).readlines():
     if line.startswith("Gene ID"):
         current_id = line.split(": ").pop().strip()
+    elif line.startswith("Transcript Length:"):
+        current_len = int(line.split(':').pop().strip())
     elif line.startswith("GO:"):
-        mapping.append([current_id] + line.split('\t')[0:5])
+        mapping.append([current_id, current_len] + line.split('\t')[0:5])
 
 # Write output to a new file
 with open(output_file, 'wb') as csvfile:
     writer = csv.writer(csvfile, delimiter='\t')
-    writer.writerow(["id", "ontology", "go_term_name", "source", "evidence_code"])
+    writer.writerow(["gene_id", "transcript_length", "go_id", "ontology", "go_term_name", 
+                     "source", "evidence_code"])
     writer.writerows(mapping)
 
 print("Done! Output saved to %s" % output_file)
