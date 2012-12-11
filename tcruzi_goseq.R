@@ -12,34 +12,49 @@
 # tryp2go.py can be used.
 #
 #####################################################################
+library(DESeq)
 library(goseq)
 
-# Use DESeq to determine which genes are differentially expressed
-library(DESeq)
+# To begin, use DESeq to determine which genes are differentially expressed
+
+# input file
+input.dir <- '../data/DEseq_comparisons/hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci'
+input.file <- 'hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci.counttable.sorted'
+
+# Read in count count table
+file.path <- paste(input.dir, input.file, sep='/')
+count.table <- read.table(file.path, header=TRUE, row.names=1)
+
+# Exclude ambigous and no_feature rows
+count.table <- count.table[!rownames(count.table) %in% c('ambiguous', 'no_feature'),]
 
 # Infection conditions
-condition <- c("4 hours after infection", 
+condition <- c("Prior to infection",
+               "4 hours after infection",
                "6 hours after infection",
                "12 hours after infection",
                "20 hours after infection",
+               "20 hours after infection",
                "24 hours after infection",
                "48 hours after infection",
+               "48 hours after infection",
+               "48 hours after infection",
+               "72 hours after infection",
                "72 hours after infection")
 
-# Normalize counts
-counts <- read.table('../../data/human_counts_replicates.csv', header=TRUE, row.names=1, sep=",")
-cds <- newCountDataSet(counts, condition)
+cds <- newCountDataSet(count.table, condition)
+
+# Estimate gene abundance normalization factor
 cds <- estimateSizeFactors(cds)
 
-#Variance estimation
+# Variance estimation
 cds <- estimateDispersions(cds)
 
 # DE Analysis
-result <- nbinomTest(cds, "before_tc_infection", "48hrs_after_tc_infection")
+result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 
-#Filter out significantly DE genes with fdr < 0.1
+# Filter out significantly DE genes with fdr < 0.1
 significant_genes <- result[result$padj < 0.1,]
 
 # Read in TriTryp gene ID/GO term mapping
 go.terms <- read.delim('output/TcruziEsmeraldo_GOTerms.tsv', row.names=NULL)
-
