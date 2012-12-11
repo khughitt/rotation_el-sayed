@@ -83,7 +83,7 @@ cds <- newCountDataSet(count.table, condition)
 
 Next we will normalize for transcript abundance and estimate sample variance.
 
-```{r}
+```{r, warning=FALSE}
 # Estimate gene abundance normalization factor
 cds <- estimateSizeFactors(cds)
 
@@ -93,7 +93,7 @@ cds <- estimateDispersions(cds)
 
 Now we are ready to perform look for DE.
 
-```{r deseq, warning:FALSE}
+```{r}
 # DE Analysis
 result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 

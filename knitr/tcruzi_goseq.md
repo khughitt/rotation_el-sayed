@@ -91,22 +91,6 @@ cds <- estimateSizeFactors(cds)
 cds <- estimateDispersions(cds)
 ```
 
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: glm.fit: algorithm did not converge
-```
-
-```
-## Warning: Dispersion fit did not converge.
-```
-
 
 Now we are ready to perform look for DE.
 
