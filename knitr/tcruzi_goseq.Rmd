@@ -1,0 +1,54 @@
+Table of Contents
+=================
+
+1. Overview
+2. Data Preparation
+3. Differential Expression analysis (DESeq)
+4  GO Enrichment Analysis (GOSeq)
+
+Overview
+========
+
+**STATUS**: In Progress (2012/12/11)
+
+The goal of this document is to explore the use of [DESeq](http://www-huber.embl.de/users/anders/DESeq/)
+and [GOSeq](http://www.bioconductor.org/packages/release/bioc/html/goseq.html)
+to look for functional enrichment in [T. Cruzi](http://en.wikipedia.org/wiki/Trypanosoma_cruzi)
+RNA-Seq data.
+
+System Information
+------------------
+
+```{r libraries, message=FALSE}
+library(DESeq)
+library(goseq)
+```
+
+```{r  sysinfo}
+sessionInfo()
+```
+
+Data Preparation
+================
+
+The first step necessary is to read in both the RNA-Seq data, and also a table
+relating T. Cruzi gene id's and GO terms. GOSeq supports automatically mapping
+gene id's to the necessary GO terms and gene lengths for certain organisms and
+gene identifiers (e.g. human/Ensembl), however, it does not currently support
+[TriTrypDB](http://tritrypdb.org/tritrypdb/) id's.
+
+GOSeq can still be used for the enrichment analsys, however, it must be manually
+provided with the necessary mapping and length info.
+
+Python was used (see tryp2go.py) to process a data file from TriTrypDB which
+contains all of the neccessary information: `TriTrypDB-4.2_TcruziEsmeraldo-LikeGene.txt`.
+The output of this is a tab-delimited file (`TcruziEsmeraldo_GOTerms.tsv`) where
+each row includes a gene id, gene length, GO id, GO ontology, GO term name, source
+and evidence code.
+
+**Future Work**: In addition to using GO terms listed in TriTrypDB, another
+possibility might be to use [pfam2go](http://www.geneontology.org/external2go/pfam2go)
+to scan the T. Cruzi transcriptome at the protein family level to look for new
+GO term associations.
+
+
