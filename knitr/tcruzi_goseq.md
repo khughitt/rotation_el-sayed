@@ -99,6 +99,15 @@ Now we are ready to perform look for DE.
 # DE Analysis
 result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 
+# Plot p-value histogram
+hist(result$pval, breaks = 100, col = "limegreen", border = "slateblue", main = "DESeq p-value Histogram")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+
+
+```r
 # Filter out significantly DE genes with fdr < 0.1
 significant_genes <- result[result$padj < 0.1, ]
 ```
@@ -109,6 +118,31 @@ GO Enrichment Analysis (GOSeq)
 
 ```r
 library(goseq)
+```
+
+
+
+```r
+# Read in TriTryp gene id/GO term mapping
+go.terms <- read.delim("../output/TcruziEsmeraldo_GOTerms.tsv", row.names = NULL)
+head(go.terms)
+```
+
+```
+##                 gene_id transcript_length      go_id           ontology
+## 1 Tc00.1047053397937.10               639 GO:0016049 Biological Process
+## 2 Tc00.1047053397937.10               639 GO:0016071 Biological Process
+## 3 Tc00.1047053397937.10               639 GO:0005737 Cellular Component
+## 4 Tc00.1047053397937.10               639 GO:0003723 Molecular Function
+## 5 Tc00.1047053397937.10               639 GO:0003723 Molecular Function
+## 6 Tc00.1047053397937.10               639 GO:0005488 Molecular Function
+##             go_term_name   source evidence_code
+## 1            cell growth   GeneDB           IEA
+## 2 mRNA metabolic process   GeneDB           IEA
+## 3              cytoplasm   GeneDB           IEA
+## 4            RNA binding Interpro           IEA
+## 5            RNA binding   GeneDB           IEA
+## 6                binding Interpro           IEA
 ```
 
 
@@ -127,12 +161,12 @@ sessionInfo()
 ## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.utf8       LC_NUMERIC=C             
-##  [3] LC_TIME=en_US.utf8        LC_COLLATE=en_US.utf8    
-##  [5] LC_MONETARY=en_US.utf8    LC_MESSAGES=en_US.utf8   
-##  [7] LC_PAPER=C                LC_NAME=C                
-##  [9] LC_ADDRESS=C              LC_TELEPHONE=C           
-## [11] LC_MEASUREMENT=en_US.utf8 LC_IDENTIFICATION=C      
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=C                 LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
