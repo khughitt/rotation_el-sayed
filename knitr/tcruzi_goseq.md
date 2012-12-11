@@ -3,8 +3,9 @@ Table of Contents
 
 1. Overview
 2. Data Preparation
-3. Differential Expression analysis (DESeq)
+3. Differential Expression Analysis (DESeq)
 4  GO Enrichment Analysis (GOSeq)
+5. Meta
 
 Overview
 ========
@@ -16,16 +17,122 @@ and [GOSeq](http://www.bioconductor.org/packages/release/bioc/html/goseq.html)
 to look for functional enrichment in [T. Cruzi](http://en.wikipedia.org/wiki/Trypanosoma_cruzi)
 RNA-Seq data.
 
-System Information
-------------------
+Data Preparation
+================
+
+The first step necessary is to read in both the RNA-Seq data, and also a table
+relating T. Cruzi gene id's and GO terms. GOSeq supports automatically mapping
+gene id's to the necessary GO terms and gene lengths for certain organisms and
+gene identifiers (e.g. human/Ensembl), however, it does not currently support
+[TriTrypDB](http://tritrypdb.org/tritrypdb/) id's.
+
+GOSeq can still be used for the enrichment analsys, however, it must be manually
+provided with the necessary mapping and length info.
+
+Python was used (see tryp2go.py) to process a data file from TriTrypDB which
+contains all of the neccessary information: `TriTrypDB-4.2_TcruziEsmeraldo-LikeGene.txt`.
+The output of this is a tab-delimited file (`TcruziEsmeraldo_GOTerms.tsv`) where
+each row includes a gene id, gene length, GO id, GO ontology, GO term name, source
+and evidence code.
+
+**Future Work**: In addition to using GO terms listed in TriTrypDB, another
+possibility might be to use [pfam2go](http://www.geneontology.org/external2go/pfam2go)
+to scan the T. Cruzi transcriptome at the protein family level to look for new
+GO term associations.
+
+Differential Expression Analysis (DESeq)
+========================================
+
+To begin, let's read in the RNA-Seq count data generated from HTSeq.
+
+
+```r
+
+# Input files
+input.dir <- "../../data/DEseq_comparisons/hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci"
+input.file <- "hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci.counttable.sorted"
+
+# Read in count count table
+file.path <- paste(input.dir, input.file, sep = "/")
+count.table <- read.table(file.path, header = TRUE, row.names = 1)
+
+# Exclude ambiguous and no_feature rows
+count.table <- count.table[!rownames(count.table) %in% c("ambiguous", "no_feature"), 
+    ]
+```
+
 
 
 ```r
 library(DESeq)
+```
+
+
+
+```r
+# Infection conditions
+condition <- c("Prior to infection", "4 hours after infection", "6 hours after infection", 
+    "12 hours after infection", "20 hours after infection", "20 hours after infection", 
+    "24 hours after infection", "48 hours after infection", "48 hours after infection", 
+    "48 hours after infection", "72 hours after infection", "72 hours after infection")
+
+cds <- newCountDataSet(count.table, condition)
+```
+
+
+Next we will normalize for transcript abundance and estimate sample variance.
+
+
+```r
+# Estimate gene abundance normalization factor
+cds <- estimateSizeFactors(cds)
+
+# Variance estimation
+cds <- estimateDispersions(cds)
+```
+
+```
+## Warning: glm.fit: algorithm did not converge
+```
+
+```
+## Warning: glm.fit: algorithm did not converge
+```
+
+```
+## Warning: glm.fit: algorithm did not converge
+```
+
+```
+## Warning: Dispersion fit did not converge.
+```
+
+
+Now we are ready to perform look for DE.
+
+
+```r
+# DE Analysis
+result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
+
+# Filter out significantly DE genes with fdr < 0.1
+significant_genes <- result[result$padj < 0.1, ]
+```
+
+
+GO Enrichment Analysis (GOSeq)
+==============================
+
+```r
 library(goseq)
 ```
 
 
+Meta
+====
+
+System Information
+------------------
 
 ```r
 sessionInfo()
@@ -66,29 +173,5 @@ sessionInfo()
 ## [28] stringr_0.6.2          survival_2.36-14       tools_2.15.2          
 ## [31] XML_3.95-0.1           xtable_1.7-0           zlibbioc_1.4.0
 ```
-
-
-Data Preparation
-================
-
-The first step necessary is to read in both the RNA-Seq data, and also a table
-relating T. Cruzi gene id's and GO terms. GOSeq supports automatically mapping
-gene id's to the necessary GO terms and gene lengths for certain organisms and
-gene identifiers (e.g. human/Ensembl), however, it does not currently support
-[TriTrypDB](http://tritrypdb.org/tritrypdb/) id's.
-
-GOSeq can still be used for the enrichment analsys, however, it must be manually
-provided with the necessary mapping and length info.
-
-Python was used (see tryp2go.py) to process a data file from TriTrypDB which
-contains all of the neccessary information: `TriTrypDB-4.2_TcruziEsmeraldo-LikeGene.txt`.
-The output of this is a tab-delimited file (`TcruziEsmeraldo_GOTerms.tsv`) where
-each row includes a gene id, gene length, GO id, GO ontology, GO term name, source
-and evidence code.
-
-**Future Work**: In addition to using GO terms listed in TriTrypDB, another
-possibility might be to use [pfam2go](http://www.geneontology.org/external2go/pfam2go)
-to scan the T. Cruzi transcriptome at the protein family level to look for new
-GO term associations.
 
 

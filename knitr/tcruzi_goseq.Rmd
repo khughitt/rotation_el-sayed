@@ -3,8 +3,9 @@ Table of Contents
 
 1. Overview
 2. Data Preparation
-3. Differential Expression analysis (DESeq)
+3. Differential Expression Analysis (DESeq)
 4  GO Enrichment Analysis (GOSeq)
+5. Meta
 
 Overview
 ========
@@ -15,18 +16,6 @@ The goal of this document is to explore the use of [DESeq](http://www-huber.embl
 and [GOSeq](http://www.bioconductor.org/packages/release/bioc/html/goseq.html)
 to look for functional enrichment in [T. Cruzi](http://en.wikipedia.org/wiki/Trypanosoma_cruzi)
 RNA-Seq data.
-
-System Information
-------------------
-
-```{r libraries, message=FALSE}
-library(DESeq)
-library(goseq)
-```
-
-```{r  sysinfo}
-sessionInfo()
-```
 
 Data Preparation
 ================
@@ -51,4 +40,79 @@ possibility might be to use [pfam2go](http://www.geneontology.org/external2go/pf
 to scan the T. Cruzi transcriptome at the protein family level to look for new
 GO term associations.
 
+Differential Expression Analysis (DESeq)
+========================================
+
+To begin, let's read in the RNA-Seq count data generated from HTSeq.
+
+```{r}
+
+# Input files
+input.dir <- '../../data/DEseq_comparisons/hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci'
+input.file <- 'hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3_deseq_esmer_oneloci.counttable.sorted'
+
+# Read in count count table
+file.path <- paste(input.dir, input.file, sep='/')
+count.table <- read.table(file.path, header=TRUE, row.names=1)
+
+# Exclude ambiguous and no_feature rows
+count.table <- count.table[!rownames(count.table) %in% c('ambiguous', 'no_feature'),]
+```
+
+```{r load_deseq, message=FALSE}
+library(DESeq)
+```
+
+```{r}
+# Infection conditions
+condition <- c("Prior to infection",
+               "4 hours after infection",
+               "6 hours after infection",
+               "12 hours after infection",
+               "20 hours after infection",
+               "20 hours after infection",
+               "24 hours after infection",
+               "48 hours after infection",
+               "48 hours after infection",
+               "48 hours after infection",
+               "72 hours after infection",
+               "72 hours after infection")
+
+cds <- newCountDataSet(count.table, condition)
+```
+
+Next we will normalize for transcript abundance and estimate sample variance.
+
+```{r}
+# Estimate gene abundance normalization factor
+cds <- estimateSizeFactors(cds)
+
+# Variance estimation
+cds <- estimateDispersions(cds)
+```
+
+Now we are ready to perform look for DE.
+
+```{r deseq, warning:FALSE}
+# DE Analysis
+result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
+
+# Filter out significantly DE genes with fdr < 0.1
+significant_genes <- result[result$padj < 0.1,]
+```
+
+GO Enrichment Analysis (GOSeq)
+==============================
+```{r load_goseq, message=FALSE}
+library(goseq)
+```
+
+Meta
+====
+
+System Information
+------------------
+```{r  sysinfo}
+sessionInfo()
+```
 

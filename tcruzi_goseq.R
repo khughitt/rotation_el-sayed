@@ -25,7 +25,7 @@ input.file <- 'hpgl0062vs64vs66vs68vs54vs59vs70vs56vs60vs72vs58vs61_tophatv2.0.3
 file.path <- paste(input.dir, input.file, sep='/')
 count.table <- read.table(file.path, header=TRUE, row.names=1)
 
-# Exclude ambigous and no_feature rows
+# Exclude ambiguous and no_feature rows
 count.table <- count.table[!rownames(count.table) %in% c('ambiguous', 'no_feature'),]
 
 # Infection conditions
