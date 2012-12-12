@@ -22,7 +22,9 @@ problematic_sl_contigs = '../data/inside_CDS_total_5UTR_coodinates_sequences.sco
 seqs = dict((seq.id[7:-2], seq) for seq in SeqIO.parse(ref_genome, 'fasta'))
 
 # Parse ambiguous problematic trans-splicing table
-cols = ['contig', 'strand', 'chromosome', 'start', 'end', 'frequency', 'score']
+cols = ['gene id', 'strand', 'chromosome',
+        'trans_splicing_start', 'cds_end', 'frequency', 'score']
+
 data = read_csv(problematic_sl_contigs, sep=' ', index_col=0, 
                 usecols=[0, 1, 2, 3, 4, 6, 8], names=cols)
 
@@ -34,11 +36,11 @@ for i, gene in enumerate(data.values):
     #[-, Chr24, 249358, 251338, 1, 1]
     chromosome = seqs["Tc" + gene[1]]
     bioseq = chromosome[gene[2]:gene[3]]
-    
+
     # if on negative strand, take reverse complement
     if gene[0] == '-':
         bioseq = bioseq.reverse_complement()
-        
+
     # return next start-site if one exists
     start_sites.append(bioseq.seq.find('ATG'))
 
@@ -46,22 +48,4 @@ for i, gene in enumerate(data.values):
 data = data.join(Series(start_sites, index=data.index, name='ATG'))
 data.to_csv('../data/sl_analysis_output.csv')
 
-# using .xs()
-#for i, gene_name in enumerate(data.index):
-    # select gene
-    #genes = data.xs(gene_name)
-    
-    # for now, ignore genes with same start site
-    #gene = genes.drop_duplicates(cols='start')
-    
-#    # get gene sequence
-#    chromosome = seqs[gene['chromosome']]
-#    seq = chromosome[gene['start']:gene['end']]
-#    
-#    # if on negative strand, take reverse complement
-#    if gene['strand'] == '-':
-#        seq = seq.reverse_complement()
-#        
-#    # return next start-site if one exists
-#    start_sites.append(seq.find('ATG'))
 
