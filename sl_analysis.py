@@ -31,9 +31,15 @@ data = read_csv(problematic_sl_contigs, sep=' ', index_col=0,
 # Find start sites
 start_sites = []
 
-for i, gene in enumerate(data.values):
+# TEST 12/12/12: keep track of the sequences...
+genes = []
+
+for i in range(len(data)):
     # get gene sequence
-    #[-, Chr24, 249358, 251338, 1, 1]
+    # ex: [-, Chr24, 249358, 251338, 1, 1]
+    id_ = data.index[i]
+    gene = data.values[i]
+
     chromosome = seqs["Tc" + gene[1]]
     bioseq = chromosome[gene[2]:gene[3]]
 
@@ -43,6 +49,7 @@ for i, gene in enumerate(data.values):
 
     # return next start-site if one exists
     start_sites.append(bioseq.seq.find('ATG'))
+    genes.append((id_, gene, bioseq))
 
 # add start site column to right of existing data
 data = data.join(Series(start_sites, index=data.index, name='ATG'))

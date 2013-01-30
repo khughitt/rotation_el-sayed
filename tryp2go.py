@@ -9,14 +9,15 @@ Keith Hughitt <khughitt@umd.edu>
 Processes a TriTrypDB file containing Trypanosome gene ontology (GO) terms and
 return a new table mapping gene id's to GO terms.
 
-@TODO:
- *Add comment at top of output (source/date)
 """
+import os
 import sys
 import csv
+import datetime
 
+# input and outpfile filepaths
 input_file = "../data/TriTrypDB-4.2_TcruziEsmeraldo-LikeGene.txt"
-output_file = 'output/TcruziEsmeraldo_GOTerms.tsv'
+output_file = 'output/TcruziEsmeraldo_GOTerms_4.2.tsv'
 
 # Parse TriTrypDB GO terms
 current_id = None
@@ -32,7 +33,14 @@ for line in open(input_file).readlines():
         mapping.append([current_id, current_len] + line.split('\t')[0:5])
 
 # Write output to a new file
-with open(output_file, 'wb') as csvfile:
+timestamp = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+
+with open(output_file, 'w') as csvfile:
+    csvfile.write('#\n')
+    csvfile.write('# TriTrypDB gene ID to GO term mapping\n')
+    csvfile.write('# Generated from %s on %s\n' % (os.path.basename(input_file),
+                                                   timestamp))
+    csvfile.write('#\n')
     writer = csv.writer(csvfile, delimiter='\t')
     writer.writerow(["gene_id", "transcript_length", "go_id", "ontology", "go_term_name", 
                      "source", "evidence_code"])
