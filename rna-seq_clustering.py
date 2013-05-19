@@ -21,7 +21,7 @@ target="tcruzi"
 # Read in data
 col_names = ['gene', 4, 6, 12, 20, 24, 48, 72]
 
-replicates = read_csv('../data/%s_counts_replicates' % target,
+replicates = read_csv('../data/%s_counts_replicates.csv' % target,
                              index_col=0, skiprows=1, header=None,
                              names=col_names)
 

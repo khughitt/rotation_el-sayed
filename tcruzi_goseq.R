@@ -53,8 +53,24 @@ cds <- estimateDispersions(cds)
 # DE Analysis
 result <- nbinomTest(cds, "Prior to infection", "48 hours after infection")
 
-# Filter out significantly DE genes with fdr < 0.1
-significant_genes <- result[result$padj < 0.1,]
+# Filter out significantly DE genes with fdr < 0.05
+significant_genes <- result[result$padj < 0.05,]
+
+# Save result
+save(significant_genes, file='output/significant_genes.RData')
 
 # Read in TriTryp gene ID/GO term mapping
 go.terms <- read.delim('output/TcruziEsmeraldo_GOTerms.tsv', row.names=NULL)
+
+# Convert to binary list of DE
+de.genes <- data.frame(as.numeric(result$padj < 0.1), row.names=result$id)
+names(de.genes) = c("differentially_expressed")
+
+# Pull lengths of target genes from go.terms
+# lengths = subset(go.terms, !duplicated(go.terms$gene_id))
+# go.terms <- go.terms[go.terms$gene_id %in% row.names(de.genes]
+# TODO: normal gene ids (exon_Tc00..60-1 vs. Tc00....10)
+# combining data - merge(df1, df2)
+
+# Estimate length bias
+# x <- nullp(de.genes, bias.data=transcript.lengths)
