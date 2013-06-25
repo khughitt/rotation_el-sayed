@@ -1,3 +1,4 @@
+data/
 output/*
 *.py[cod]
 knitr/cache
